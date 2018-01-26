@@ -133,12 +133,12 @@ if(BUILD_WITH_ROS)
   )
 else(BUILD_WITH_ROS) # do a classical install
   install(TARGETS ${LIB_NAME}
-    ARCHIVE DESTINATION /usr/local/lib
-    LIBRARY DESTINATION /usr/local/lib
-    RUNTIME DESTINATION /usr/local/bin/${PROJECT_NAME}
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
   )
   install(DIRECTORY include/${PROJECT_NAME}/
-    DESTINATION /usr/local/include/${PROJECT_NAME}
+    DESTINATION include/${PROJECT_NAME}
   )
   set(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules)
   message(STATUS "module path: " ${CMAKE_MODULE_PATH})
