@@ -1,12 +1,15 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.2)
 project(novatel)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 #######################################
 ## Check for ROS ##
 #######################################
 
-option(BUILD_WITH_ROS "Build ROS node and use catkin." ON)
+option(BUILD_WITH_ROS "Build ROS node and use catkin." OFF)
 
 if (NOT catkin_FOUND)
    SET(BUILD_WITH_ROS OFF)
@@ -40,7 +43,8 @@ endif (BUILD_WITH_ROS)
 
 # System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system filesystem thread)
-
+find_package(ld-cmake-tools REQUIRED)
+include(${LD_CMAKE_TOOLS_USE_FILE})
 ###########
 ## Build ##
 ###########
@@ -145,6 +149,9 @@ else(BUILD_WITH_ROS) # do a classical install
   install(FILES Findnovatel.cmake DESTINATION ${CMAKE_MODULE_PATH})
 endif (BUILD_WITH_ROS)
 
+cmake_make_installation(
+	TARGETS ${PROJECT_NAME}
+	IS_EXECUTABLE)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
