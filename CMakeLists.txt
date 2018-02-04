@@ -151,7 +151,7 @@ endif (BUILD_WITH_ROS)
 
 cmake_make_installation(
 	TARGETS ${PROJECT_NAME}
-	IS_EXECUTABLE)
+    CMAKE_IN Config.cmake.in)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
