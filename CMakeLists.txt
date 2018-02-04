@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(novatel)
+project(novatel VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
@@ -136,22 +136,12 @@ if(BUILD_WITH_ROS)
     PATTERN ".svn" EXCLUDE
   )
 else(BUILD_WITH_ROS) # do a classical install
-  install(TARGETS ${LIB_NAME}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-  )
-  install(DIRECTORY include/${PROJECT_NAME}/
-    DESTINATION include/${PROJECT_NAME}
-  )
-  set(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules)
-  message(STATUS "module path: " ${CMAKE_MODULE_PATH})
-  install(FILES Findnovatel.cmake DESTINATION ${CMAKE_MODULE_PATH})
+    cmake_make_installation(
+        TARGETS ${PROJECT_NAME}
+        CMAKE_IN Config.cmake.in)
 endif (BUILD_WITH_ROS)
 
-cmake_make_installation(
-	TARGETS ${PROJECT_NAME}
-    CMAKE_IN Config.cmake.in)
+
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
