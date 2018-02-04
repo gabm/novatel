@@ -138,7 +138,10 @@ if(BUILD_WITH_ROS)
 else(BUILD_WITH_ROS) # do a classical install
     cmake_make_installation(
         TARGETS ${PROJECT_NAME}
-        CMAKE_IN Config.cmake.in)
+        CMAKE_IN Config.cmake.in
+        HEADER_PATHS ${CMAKE_SOURCE_DIR}/include/
+        HEADER_PATTERNS *.h
+        )
 endif (BUILD_WITH_ROS)
 
 
