@@ -306,6 +306,7 @@ struct RawImu
 	int32_t x_gyro_rate;		//!< change in angle around x axis in radians
 	int8_t crc[4];
 });
+
 // scale factor for change in angle (1.0/((double)8589934592.0)) for the AG11, AG58, AG17, and AG62
 // scale factor for change in velocity (acceleration)
 //(0.3048/((double)134217728.0)) for the AG11 and AG58
@@ -333,6 +334,58 @@ struct RawImuShort
 	int32_t x_gyro_rate;			//!< change in angle around x axis in radians
 	int8_t crc[4];
 });
+
+/*!
+ * CORRIMU Message Structure
+ * This log contains the RAWIMU data corrected for gravity, earth’s rotation, and
+ * accelerometer and gyroscope biases. The values in this log are instantaneous, incremental values, in
+ * units of radians for the attitude rate and m/s for the accelerations. TO GET the full attitude rate and
+ * acceleration values, you MUST multiply the values in the CORRIMUDATA(S) log by the data rate of
+ * your IMU in Hz.
+ * For the correct coordinate Frame , see SPAN Manual pp. 155, 41,124,
+ * To log this message, use CORRIMUS Data Format.
+ */
+PACK(
+struct CorrImu
+{
+	Oem4BinaryHeader header;	//!< Message header
+	uint32_t gps_week;			//!< GPS week number
+	double gps_millisecs;		//!< Milliseconds into GPS week
+	double pitchRate;		//!< about x axis
+	double rollRate; //!<about y axis
+	double yawRate; //!<about z-axis
+	double LateralAcc; //!<along x axis
+	double LongitudinalAcc; //!<along y axis
+	double VerticalAcc; //!<along z axis
+	int8_t crc[4];
+});
+
+/*!
+ * CORRIMUS Message Structure
+ * This log contains the RAWIMU data corrected for gravity, earth’s rotation, and
+ * accelerometer and gyroscope biases. The values in this log are instantaneous, incremental values, in
+ * units of radians for the attitude rate and m/s for the accelerations. TO GET the full attitude rate and
+ * acceleration values, you MUST multiply the values in the CORRIMUDATA(S) log by the data rate of
+ *  your IMU in Hz.
+ * For the correct coordinate Frame , see SPAN Manual pp. 155, 41,124,
+ * Short form of CORRIMU
+ */
+PACK(
+struct CorrImuShort
+{
+	Oem4ShortBinaryHeader header;	//!< Message header
+	uint32_t gps_week;			//!< GPS week number
+	double gps_millisecs;		//!< Milliseconds into GPS week
+	double pitchRate;		//!< about x axis
+	double rollRate; //!<about y axis
+	double yawRate; //!<about z-axis
+	double LateralAcc; //!<along x axis
+	double LongitudinalAcc; //!<along y axis
+	double VerticalAcc; //!<along z axis
+	int8_t crc[4];
+});
+
+
 
 
 /*!
@@ -705,7 +758,7 @@ struct RangeMeasurements {
  * This log contains the pseudorange information for a
  * single channel. Used in the RangeMeasurements structure.
  */
-PACK( 
+PACK(
 struct CompressedRangeRecord {
     int64_t doppler:28;                             //!< Doppler frequency [Hz]; SF = 1/256
     uint64_t pseudorange:36;                         //!<  pseudorange [m]; SF = 1/128
@@ -834,7 +887,7 @@ struct RawAlmanac
 
 /*!
  * ALMANAC
- * Contains decoded almanac parameters from Subframes 4 and 5 with parity 
+ * Contains decoded almanac parameters from Subframes 4 and 5 with parity
  * info removed.
  */
 PACK(
@@ -842,7 +895,7 @@ struct AlmanacData {
 	uint32_t prn;
 	uint32_t ref_week;
 	double ref_time;					//!< [sec]
-	double eccentricity;			
+	double eccentricity;
 	double right_ascension_rate;		//!< [rad/sec]
 	double right_ascension;				//!< [rad]
 	double perigee;						//!< [rad]
@@ -852,10 +905,10 @@ struct AlmanacData {
 	double corrected_mean_motion;		//!< [rad/sec]
 	double semi_major_axis;				//!< [m]
 	double inclination_angle;			//!< [rad] Angle of inclination relative to .3*pi
-	uint32_t sv_configuration;			//!< 
+	uint32_t sv_configuration;			//!<
 	uint32_t sv_health;					//!< (6 bits) From Page 25 of subframe 4 or 5
-	uint32_t sv_health_from_almanac;	//!< (8 bits) 
-	true_false anti_spoofing;			//!< 
+	uint32_t sv_health_from_almanac;	//!< (8 bits)
+	true_false anti_spoofing;			//!<
 });
 PACK(
 struct Almanac {
