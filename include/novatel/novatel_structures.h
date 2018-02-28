@@ -373,7 +373,7 @@ struct CorrImu
 PACK(
 struct CorrImuShort
 {
-	Oem4ShortBinaryHeader header;	//!< Message header
+    OEM4ShortBinaryHeader header;	//!< Message header
 	uint32_t gps_week;			//!< GPS week number
 	double gps_millisecs;		//!< Milliseconds into GPS week
 	double pitchRate;		//!< about x axis
