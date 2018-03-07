@@ -306,7 +306,6 @@ struct RawImu
 	int32_t x_gyro_rate;		//!< change in angle around x axis in radians
 	int8_t crc[4];
 });
-
 // scale factor for change in angle (1.0/((double)8589934592.0)) for the AG11, AG58, AG17, and AG62
 // scale factor for change in velocity (acceleration)
 //(0.3048/((double)134217728.0)) for the AG11 and AG58
@@ -348,16 +347,16 @@ struct RawImuShort
 PACK(
 struct CorrImu
 {
-	Oem4BinaryHeader header;	//!< Message header
-	uint32_t gps_week;			//!< GPS week number
-	double gps_millisecs;		//!< Milliseconds into GPS week
-	double pitchRate;		//!< about x axis
-	double rollRate; //!<about y axis
-	double yawRate; //!<about z-axis
-	double LateralAcc; //!<along x axis
-	double LongitudinalAcc; //!<along y axis
-	double VerticalAcc; //!<along z axis
-	int8_t crc[4];
+    Oem4BinaryHeader header;    //!< Message header
+    uint32_t gps_week;            //!< GPS week number
+    double gps_millisecs;        //!< Milliseconds into GPS week
+    double pitchRate;        //!< about x axis
+    double rollRate; //!<about y axis
+    double yawRate; //!<about z-axis
+    double LateralAcc; //!<along x axis
+    double LongitudinalAcc; //!<along y axis
+    double VerticalAcc; //!<along z axis
+    int8_t crc[4];
 });
 
 /*!
@@ -373,20 +372,17 @@ struct CorrImu
 PACK(
 struct CorrImuShort
 {
-    OEM4ShortBinaryHeader header;	//!< Message header
-	uint32_t gps_week;			//!< GPS week number
-	double gps_millisecs;		//!< Milliseconds into GPS week
-	double pitchRate;		//!< about x axis
-	double rollRate; //!<about y axis
-	double yawRate; //!<about z-axis
-	double LateralAcc; //!<along x axis
-	double LongitudinalAcc; //!<along y axis
-	double VerticalAcc; //!<along z axis
-	int8_t crc[4];
+    OEM4ShortBinaryHeader header;    //!< Message header
+    uint32_t gps_week;            //!< GPS week number
+    double gps_millisecs;        //!< Milliseconds into GPS week
+    double pitchRate;        //!< about x axis
+    double rollRate; //!<about y axis
+    double yawRate; //!<about z-axis
+    double LateralAcc; //!<along x axis
+    double LongitudinalAcc; //!<along y axis
+    double VerticalAcc; //!<along z axis
+    int8_t crc[4];
 });
-
-
-
 
 /*!
  * VEHICLEBODYROTATION Message Structure
@@ -758,7 +754,7 @@ struct RangeMeasurements {
  * This log contains the pseudorange information for a
  * single channel. Used in the RangeMeasurements structure.
  */
-PACK(
+PACK( 
 struct CompressedRangeRecord {
     int64_t doppler:28;                             //!< Doppler frequency [Hz]; SF = 1/256
     uint64_t pseudorange:36;                         //!<  pseudorange [m]; SF = 1/128
@@ -887,7 +883,7 @@ struct RawAlmanac
 
 /*!
  * ALMANAC
- * Contains decoded almanac parameters from Subframes 4 and 5 with parity
+ * Contains decoded almanac parameters from Subframes 4 and 5 with parity 
  * info removed.
  */
 PACK(
@@ -895,7 +891,7 @@ struct AlmanacData {
 	uint32_t prn;
 	uint32_t ref_week;
 	double ref_time;					//!< [sec]
-	double eccentricity;
+	double eccentricity;			
 	double right_ascension_rate;		//!< [rad/sec]
 	double right_ascension;				//!< [rad]
 	double perigee;						//!< [rad]
@@ -905,10 +901,10 @@ struct AlmanacData {
 	double corrected_mean_motion;		//!< [rad/sec]
 	double semi_major_axis;				//!< [m]
 	double inclination_angle;			//!< [rad] Angle of inclination relative to .3*pi
-	uint32_t sv_configuration;			//!<
+	uint32_t sv_configuration;			//!< 
 	uint32_t sv_health;					//!< (6 bits) From Page 25 of subframe 4 or 5
-	uint32_t sv_health_from_almanac;	//!< (8 bits)
-	true_false anti_spoofing;			//!<
+	uint32_t sv_health_from_almanac;	//!< (8 bits) 
+	true_false anti_spoofing;			//!< 
 });
 PACK(
 struct Almanac {
@@ -1048,7 +1044,7 @@ struct TrackStatus {
 
 //********************
 //RTKDATAB
-
+PACK(
 struct rtkdatab_header {
     uint32_t rtkinfo; //RTK information
     uint8_t num_obs; //Number of observations tracked
@@ -1075,46 +1071,46 @@ struct rtkdatab_header {
     float sd_z; // Standard deviation of float solution baseline in ECEF - z
     uint32_t ref_prn; // Reference PRN
     int32_t num_svs; // The number of SVs in data portion
-} __attribute__((packed));
+});
 
-struct rtkdatab_data {
+PACK(struct rtkdatab_data {
     uint32_t prn; // GPS satellite PRN
     AMBIGUITY_TYPE ambiguity_type; // Type of ambiguity
     float residual; // Satellite health
-} __attribute__((packed));
+});
 
-struct rtkdatab_log {
+PACK(struct rtkdatab_log {
     Oem4BinaryHeader hdr;
     SolutionStatus solutionStatus; //Solution status
     PositionType positionType; //Position type
     rtkdatab_header header;
     rtkdatab_data data[MAX_NUM_SAT];
-} __attribute__((packed));
+});
 //********************
 
 
 //********************
 //RTCADATA1B
 
-struct rtcadata1b_header {
+PACK(struct rtcadata1b_header {
     double zcount; //Week number from subframe one of the ephemeris
     uint8_t aeb; //Acceleration error bound
     uint32_t num_prn; //Number of satellite corrections with info to follow
-} __attribute__((packed));
+});
 
-struct rtcadata1b_data {
+PACK(struct rtcadata1b_data {
     uint32_t prn; //PRN number of range measurement
     double range; //pseudorange correction (m)
     uint8_t iode; //Issue of ephemeris data
     double rrate; //pseudorange rate correction (m/s)
     float udre; //user differential range error
-} __attribute__((packed));
+});
 
-struct rtcadata1b_log {
+PACK(struct rtcadata1b_log {
     Oem4BinaryHeader header; //Log header
     rtcadata1b_header info;
     rtcadata1b_data data[MAX_NUM_SAT];
-} __attribute__((packed));
+});
 
 //********************
 
@@ -1122,7 +1118,7 @@ struct rtcadata1b_log {
 //********************
 //RTCADATAEPHEMB
 
-struct rtcadataephemb_data {
+PACK(struct rtcadataephemb_data {
     uint8_t des; //Novatel designator
     uint8_t subtype; //RTCA message subtype
     uint32_t week; //GPS week number
@@ -1130,28 +1126,28 @@ struct rtcadataephemb_data {
     uint32_t prn; //PRN number
     int8_t reserved[4];
     int8_t ephem[92]; //Raw ephemeris data
-} __attribute__((packed));
+});
 
-struct rtcadataephemb_log {
+PACK(struct rtcadataephemb_log {
     Oem4BinaryHeader header; //Log header
     rtcadataephemb_data data;
-} __attribute__((packed));
+});
 //********************
 
 
 //********************
 //RTCADATAOBSB - CHECK
 
-struct rtcadataobsb_header {
+PACK(struct rtcadataobsb_header {
     uint8_t des; //Novatel designator
     uint8_t subtype; //RTCA message subtype
     double min_psr; //minimum pseudorange
     float sec; //seconds into GPS week
     int8_t reserved[4];
     uint32_t num_ids; //Number of transmitter ids with info to follow
-} __attribute__((packed));
+});
 
-struct rtcadataobsb_data //Structure for RTCADATAEPHEM message
+PACK(struct rtcadataobsb_data //Structure for RTCADATAEPHEM message
 {
     uint8_t transID; //Transmitter ID
     uint8_t L1lock; //L1 lock flag
@@ -1162,32 +1158,32 @@ struct rtcadataobsb_data //Structure for RTCADATAEPHEM message
     float L2adr; //L2 carrier phase offset, accumulated doppler range
     yes_no L2encrypt; //If L2 is encrypted
     int8_t reserved[4];
-} __attribute__((packed));
+});
 
-struct rtcadataobsb_log {
+PACK(struct rtcadataobsb_log {
     Oem4BinaryHeader header; //Log header
     rtcadataobsb_header info;
     rtcadataobsb_data data[MAX_NUM_SAT]; //WT:  This is probably too many... need to verify how many id's can be sent.
-} __attribute__((packed));
+});
 //********************
 
 
 //********************
 //RTCADATAREFB
 
-struct rtcadatarefb_data {
+PACK(struct rtcadatarefb_data {
     uint8_t des; //Novatel designator
     uint8_t subtype; //RTCA message subtype
     double posX; //base station X coordinate position (mm)
     double posY; //base station Y coordinate position (mm)
     double posZ; //base station Z coordinate position (mm)
     int8_t reserved[4];
-} __attribute__((packed));
+});
 
-struct rtcadatarefb_log {
+PACK(struct rtcadatarefb_log {
     Oem4BinaryHeader header; //Log header
     rtcadatarefb_data data;
-} __attribute__((packed));
+});
 //********************
 
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(novatel)
+project(novatel VERSION 0.9.0)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
@@ -61,11 +61,17 @@ else ()
   MESSAGE("Building RELEASE library ${LIB_NAME}")
 endif ()
 
-# Declare a cpp library
-add_library(${LIB_NAME}
-  src/novatel.cpp
+set(SOURCE_FILES
+	src/novatel.cpp
 )
 
+# Declare a cpp library
+add_library(${LIB_NAME} STATIC
+			${SOURCE_FILES})
+
+target_include_directories(${LIB_NAME}
+         PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/>)
+	
 target_link_libraries(${LIB_NAME}
                       ${Boost_LIBRARIES}
                       ${catkin_LIBRARIES})
@@ -112,7 +118,7 @@ endif (NOVATEL_BUILD_EXAMPLES)
 if (BUILD_WITH_ROS)
 	# Declare a cpp executable
 	add_executable(novatel_node src/novatel_node.cpp)
-  add_dependencies(novatel_node ${catkin_EXPORTED_TARGETS})
+    add_dependencies(novatel_node ${catkin_EXPORTED_TARGETS})
 	target_link_libraries(novatel_node novatel ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 endif (BUILD_WITH_ROS)
 
@@ -136,22 +142,15 @@ if(BUILD_WITH_ROS)
     PATTERN ".svn" EXCLUDE
   )
 else(BUILD_WITH_ROS) # do a classical install
-  install(TARGETS ${LIB_NAME}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-  )
-  install(DIRECTORY include/${PROJECT_NAME}/
-    DESTINATION include/${PROJECT_NAME}
-  )
+	cmake_make_installation(
+		TARGETS ${LIB_NAME}
+		CMAKE_IN cmake/Config.cmake.in
+		HEADER_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/include/
+		HEADER_PATTERNS "*.h")
   set(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules)
   message(STATUS "module path: " ${CMAKE_MODULE_PATH})
-  install(FILES Findnovatel.cmake DESTINATION ${CMAKE_MODULE_PATH})
+#  install(FILES Findnovatel.cmake DESTINATION ${CMAKE_MODULE_PATH})
 endif (BUILD_WITH_ROS)
-
-cmake_make_installation(
-	TARGETS ${PROJECT_NAME}
-	IS_EXECUTABLE)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
