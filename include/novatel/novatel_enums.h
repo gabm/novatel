@@ -120,7 +120,7 @@ enum SolutionStatus
 	COV_TRACE,			//!< covariance trace exceeds maximum (trace>1000m)
 	TEST_DIST,			//!< test distance exceeded (max of 3 rejections if distance > 10km)
 	COLD_START,			//!< not yet converged from cold start
-	V_H_LIMIT,			//!< height or velocity limits exceeded
+	V_H_LIMIT,			//!< height or velocity limits exceeded 
 	VARIANCE,			//!< variance exceeds limits
 	RESIDUALS,			//!< residuals are too large
 	DELTA_POS,			//!< delta position is too large
@@ -379,7 +379,7 @@ enum BINARY_LOG_TYPE
   //SPAN - INS specific logs
   BESTGPSPOS_LOG_TYPE = 423,
   BESTGPSVEL_LOG_TYPE = 506,
-  BESTLEVERARM_LOG_TYPE = 674,
+  BESTLEVERARM_LOG_TYPE = 674, 
   INSATT_LOG_TYPE = 263,		//INS ATTITUDE
   INSCOV_LOG_TYPE = 264,
   INSCOVS_LOG_TYPE = 320,
@@ -393,9 +393,7 @@ enum BINARY_LOG_TYPE
   INSVEL_LOG_TYPE = 267,
   RAWIMU_LOG_TYPE = 268,
   RAWIMUS_LOG_TYPE = 325,
-  VEHICLEBODYROTATION_LOG_TYPE = 642,
-  CORRIMU_LOG_TYPE =812,
-  CORRIMUS_LOG_TYPE =813
+  VEHICLEBODYROTATION_LOG_TYPE = 642
 };
 typedef enum BINARY_LOG_TYPE BINARY_LOG_TYPE;
 

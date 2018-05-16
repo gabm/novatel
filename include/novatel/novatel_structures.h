@@ -335,56 +335,6 @@ struct RawImuShort
 });
 
 /*!
- * CORRIMU Message Structure
- * This log contains the RAWIMU data corrected for gravity, earth’s rotation, and
- * accelerometer and gyroscope biases. The values in this log are instantaneous, incremental values, in
- * units of radians for the attitude rate and m/s for the accelerations. TO GET the full attitude rate and
- * acceleration values, you MUST multiply the values in the CORRIMUDATA(S) log by the data rate of
- * your IMU in Hz.
- * For the correct coordinate Frame , see SPAN Manual pp. 155, 41,124,
- * To log this message, use CORRIMUS Data Format.
- */
-PACK(
-struct CorrImu
-{
-    Oem4BinaryHeader header;    //!< Message header
-    uint32_t gps_week;            //!< GPS week number
-    double gps_millisecs;        //!< Milliseconds into GPS week
-    double pitchRate;        //!< about x axis
-    double rollRate; //!<about y axis
-    double yawRate; //!<about z-axis
-    double LateralAcc; //!<along x axis
-    double LongitudinalAcc; //!<along y axis
-    double VerticalAcc; //!<along z axis
-    int8_t crc[4];
-});
-
-/*!
- * CORRIMUS Message Structure
- * This log contains the RAWIMU data corrected for gravity, earth’s rotation, and
- * accelerometer and gyroscope biases. The values in this log are instantaneous, incremental values, in
- * units of radians for the attitude rate and m/s for the accelerations. TO GET the full attitude rate and
- * acceleration values, you MUST multiply the values in the CORRIMUDATA(S) log by the data rate of
- *  your IMU in Hz.
- * For the correct coordinate Frame , see SPAN Manual pp. 155, 41,124,
- * Short form of CORRIMU
- */
-PACK(
-struct CorrImuShort
-{
-	Oem4ShortBinaryHeader header;	//!< Message header
-	uint32_t gps_week;			//!< GPS week number
-	double gps_millisecs;		//!< Milliseconds into GPS week
-	double pitchRate;		//!< about x axis
-	double rollRate; //!<about y axis
-	double yawRate; //!<about z-axis
-	double LateralAcc; //!<along x axis
-	double LongitudinalAcc; //!<along y axis
-	double VerticalAcc; //!<along z axis
-	int8_t crc[4];
-});
-
-/*!
  * VEHICLEBODYROTATION Message Structure
  * The VEHICLEBODYROTATION log reports the angular
  *  offset from the vehicle frame to the SPAN frame.

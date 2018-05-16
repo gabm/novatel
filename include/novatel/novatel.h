@@ -78,8 +78,6 @@ typedef boost::function<void(VehicleBodyRotation&, double&)> VehicleBodyRotation
 typedef boost::function<void(InsSpeed&, double&)> InsSpeedCallback;
 typedef boost::function<void(RawImu&, double&)> RawImuCallback;
 typedef boost::function<void(RawImuShort&, double&)> RawImuShortCallback;
-typedef boost::function<void(CorrImu&, double&)> CorrImuCallback;
-typedef boost::function<void(CorrImuShort&, double&)>CorrImuShortCallback;
 typedef boost::function<void(Position&, double&)> BestGpsPositionCallback;
 typedef boost::function<void(BestLeverArm&, double&)> BestLeverArmCallback;
 typedef boost::function<void(InsCovariance&, double&)> InsCovarianceCallback;
@@ -187,7 +185,7 @@ public:
      */
     void SaveConfiguration();
 
-    void ConfigureInterfaceMode(std::string com_port,
+    void ConfigureInterfaceMode(std::string com_port,  
       std::string rx_mode, std::string tx_mode);
 
     void ConfigureBaudRate(std::string com_port, int baudrate);
@@ -297,10 +295,6 @@ public:
         raw_imu_callback_=handler;};
     void set_raw_imu_short_callback(RawImuShortCallback handler){
         raw_imu_short_callback_=handler;};
-    void set_corr_imu_callback(CorrImuCallback handler){
-        corr_imu_callback_=handler;};
-    void set_corr_imu_short_callback(CorrImuShortCallback handler){
-        corr_imu_short_callback_=handler;};
     void set_ins_covariance_callback(InsCovarianceCallback handler){
         ins_covariance_callback_=handler;};
     void set_ins_covariance_short_callback(InsCovarianceShortCallback handler){
@@ -437,8 +431,6 @@ private:
     InsSpeedCallback ins_speed_callback_;
     RawImuCallback raw_imu_callback_;
     RawImuShortCallback raw_imu_short_callback_;
-     CorrImuCallback corr_imu_callback_;
-   CorrImuShortCallback corr_imu_short_callback_;
     InsCovarianceCallback ins_covariance_callback_;
     InsCovarianceShortCallback ins_covariance_short_callback_;
 
