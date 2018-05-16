@@ -372,16 +372,16 @@ struct CorrImu
 PACK(
 struct CorrImuShort
 {
-    OEM4ShortBinaryHeader header;    //!< Message header
-    uint32_t gps_week;            //!< GPS week number
-    double gps_millisecs;        //!< Milliseconds into GPS week
-    double pitchRate;        //!< about x axis
-    double rollRate; //!<about y axis
-    double yawRate; //!<about z-axis
-    double LateralAcc; //!<along x axis
-    double LongitudinalAcc; //!<along y axis
-    double VerticalAcc; //!<along z axis
-    int8_t crc[4];
+	Oem4ShortBinaryHeader header;	//!< Message header
+	uint32_t gps_week;			//!< GPS week number
+	double gps_millisecs;		//!< Milliseconds into GPS week
+	double pitchRate;		//!< about x axis
+	double rollRate; //!<about y axis
+	double yawRate; //!<about z-axis
+	double LateralAcc; //!<along x axis
+	double LongitudinalAcc; //!<along y axis
+	double VerticalAcc; //!<along z axis
+	int8_t crc[4];
 });
 
 /*!
