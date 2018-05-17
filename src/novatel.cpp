@@ -1264,6 +1264,18 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
             if (raw_imu_short_callback_)
             	raw_imu_short_callback_(raw_imu_s, read_timestamp_);
             break;
+         case CORRIMU_LOG_TYPE:
+            CorrImu corr_imu;
+            memcpy(&corr_imu, message, sizeof(corr_imu));
+            if (corr_imu_callback_)
+            	corr_imu_callback_(corr_imu, read_timestamp_);
+            break;
+        case CORRIMUS_LOG_TYPE:
+            CorrImuShort corr_imu_s;
+            memcpy(&corr_imu_s, message, sizeof(corr_imu_s));
+            if (corr_imu_short_callback_)
+            	corr_imu_short_callback_(corr_imu_s, read_timestamp_);
+            break;
         case INSCOV_LOG_TYPE:
             InsCovariance ins_cov;
             memcpy(&ins_cov, message, sizeof(ins_cov));
