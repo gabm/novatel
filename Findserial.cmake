@@ -4,11 +4,15 @@ find_path(serial_INCLUDE_DIRS serial/serial.h /usr/include
 find_library(serial_RELEASE_LIB serial   PATHS /usr/lib /usr/local/lib
              "$ENV{NAMER_ROOT}")
 
-find_library(serial_DEBUG_LIB  seriald   PATHS /usr/lib /usr/local/lib
+if(WIN32)
+	 find_library(serial_DEBUG_LIB  seriald   PATHS /usr/lib /usr/local/lib
              "$ENV{NAMER_ROOT}")
 
 
-set(serial_LIBRARIES optimized ${serial_RELEASE_LIB} debug ${serial_DEBUG_LIB})
+	set(serial_LIBRARIES optimized ${serial_RELEASE_LIB} debug ${serial_DEBUG_LIB})
+else()
+	set(serial_LIBRARIES ${serial_RELEASE_LIB})
+endif(WIN32)
 set(serial_FOUND TRUE)
 
 message("Serial libraries:${serial_LIBRARIES}")
