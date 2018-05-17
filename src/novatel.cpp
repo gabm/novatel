@@ -1276,7 +1276,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
             if (ins_covariance_short_callback_)
             	ins_covariance_short_callback_(ins_cov_s, read_timestamp_);
             break;
-        case PSRDOPB_LOG_TYPE:
+  /*      case PSRDOPB_LOG_TYPE:
             Dop psr_dop;
             header_length = (uint16_t) *(message+3);
             payload_length = (((uint16_t) *(message+9)) << 8) +
@@ -1292,7 +1292,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
             if (pseudorange_dop_callback_)
             	pseudorange_dop_callback_(psr_dop, read_timestamp_);
             break;
-        case RTKDOPB_LOG_TYPE:
+     */   case RTKDOPB_LOG_TYPE:
             Dop rtk_dop;
             memcpy(&rtk_dop, message, sizeof(rtk_dop));
             if (rtk_dop_callback_)
@@ -1310,7 +1310,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
             if (ionospheric_model_callback_)
             	ionospheric_model_callback_(ion, read_timestamp_);
             break;
-        case RANGEB_LOG_TYPE:
+       /* case RANGEB_LOG_TYPE:
             RangeMeasurements ranges;
             header_length = (uint16_t) *(message+3);
             payload_length = (((uint16_t) *(message+9)) << 8) +
@@ -1423,7 +1423,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
 	          }
             break;
         }
-        case RAWEPHEMB_LOG_TYPE: {
+        */case RAWEPHEMB_LOG_TYPE: {
             RawEphemeris raw_ephemeris;
 
             memcpy(&raw_ephemeris, message, sizeof(raw_ephemeris));
@@ -1438,7 +1438,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
 //            bool result = SendBinaryDataToReceiver(message, length);
 
             break;}
-        case RAWALMB_LOG_TYPE:
+    /*    case RAWALMB_LOG_TYPE:
             RawAlmanac raw_almanac;
             header_length = (uint16_t) *(message+3);
             payload_length = (((uint16_t) *(message+9)) << 8) + ((uint16_t) *(message+8));
@@ -1453,7 +1453,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
             if(raw_almanac_callback_)
                 raw_almanac_callback_(raw_almanac, read_timestamp_);
             break;
-        case ALMANACB_LOG_TYPE:
+     case ALMANACB_LOG_TYPE:
             Almanac almanac;
             header_length = (uint16_t) *(message+3);
             payload_length = (((uint16_t) *(message+9)) << 8) + ((uint16_t) *(message+8));
@@ -1473,7 +1473,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
             uint32_t crc = CalculateBlockCRC32 (sizeof(almanac)-4, msg_ptr);
             cout << "Calculated crc: ";
             printHex((unsigned char*)crc,4);
-            */
+            *//*
             if(almanac_callback_)
                 almanac_callback_(almanac, read_timestamp_);
             break;
@@ -1507,13 +1507,13 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
             if(satellite_visibility_callback_)
                 satellite_visibility_callback_(sat_vis, read_timestamp_);
             break;
-        case TIMEB_LOG_TYPE:
+        */case TIMEB_LOG_TYPE:
             TimeOffset time_offset;
             memcpy(&time_offset, message, sizeof(time_offset));
             if (time_offset_callback_)
             	time_offset_callback_(time_offset, read_timestamp_);
             break;
-        case TRACKSTATB_LOG_TYPE:
+        /*case TRACKSTATB_LOG_TYPE:
             TrackStatus tracking_status;
             header_length = (uint16_t) *(message+3);
             payload_length = (((uint16_t) *(message+9)) << 8) + ((uint16_t) *(message+8));
@@ -1528,7 +1528,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
             if(tracking_status_callback_)
                 tracking_status_callback_(tracking_status, read_timestamp_);
             break;
-        case RXHWLEVELSB_LOG_TYPE:
+        */case RXHWLEVELSB_LOG_TYPE:
             ReceiverHardwareStatus hw_levels;
             memcpy(&hw_levels, message, sizeof(hw_levels));
             if (receiver_hardware_status_callback_)
