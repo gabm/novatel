@@ -184,7 +184,7 @@ bool Novatel::Connect(std::string port, int baudrate, bool search) {
 			}
 		}
 
-		// if the receiver was found on a different baud rate, 
+		// if the receiver was found on a different baud rate,
 		// change its setting to the selected baud rate and reconnect
 		if (found) {
 			// change baud rate to selected value
@@ -204,7 +204,7 @@ bool Novatel::Connect(std::string port, int baudrate, bool search) {
 			Disconnect();
 			boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 			connected = Connect_(port, baudrate);
-		} 
+		}
 	}
 
 	if (connected) {
@@ -225,7 +225,7 @@ bool Novatel::Connect_(std::string port, int baudrate=115200) {
 		//serial::Timeout my_timeout(50, 200, 0, 200, 0); // 115200 working settings
 		//serial_port_ = new serial::Serial(port,baudrate,my_timeout);
 
-		serial_port_ = new serial::Serial(port,baudrate,serial::Timeout::simpleTimeout(10)); 
+		serial_port_ = new serial::Serial(port,baudrate,serial::Timeout::simpleTimeout(10));
 
 		if (!serial_port_->isOpen()){
 	        std::stringstream output;
@@ -800,7 +800,7 @@ void Novatel::UnlogAll() {
     }
 }
 
-void Novatel::ConfigureInterfaceMode(std::string com_port,  
+void Novatel::ConfigureInterfaceMode(std::string com_port,
   std::string rx_mode, std::string tx_mode) {
 
 	try {
@@ -811,7 +811,7 @@ void Novatel::ConfigureInterfaceMode(std::string com_port,
 		boost::mutex::scoped_lock lock(ack_mutex_);
 		boost::system_time const timeout=boost::get_system_time()+ boost::posix_time::milliseconds(2000);
 		if (ack_condition_.timed_wait(lock,timeout)) {
-			log_info_("Ack received.  Interface mode for port " + 
+			log_info_("Ack received.  Interface mode for port " +
 				com_port + " set to: " + rx_mode + " " + tx_mode);
 		} else {
 			log_error_("No acknowledgement received for interface mode command.");
@@ -878,7 +878,9 @@ bool Novatel::UpdateVersion()
 		// loop through all packets in file and check for version messages
 		// stop when the first is found or all packets are read
 		for (size_t ii=0; ii<packets.size(); ii++) {
+			log_info_("Checking package " + ii );
 			if (ParseVersion(packets[ii])) {
+
 				return true;
 			}
         }
@@ -896,13 +898,16 @@ bool Novatel::UpdateVersion()
 
 bool Novatel::ParseVersion(std::string packet) {
 	// parse the results - message should start with "#VERSIONA"
+        log_info_("searching for version" );
         size_t found_version=packet.find("VERSIONA");
 		if (found_version==string::npos)
 			return false;
 
 		// parse version information
 		// remove header
+		log_info_("searching for ;");
 		size_t pos=packet.find(";");
+		log_info_("Is ; found ?");
 		if (pos==string::npos) {
             log_error_("Error parsing received version."
                        " End of message was not found");
@@ -911,6 +916,7 @@ bool Novatel::ParseVersion(std::string packet) {
 		}
 
 		// remove header from message
+		log_info_("Now we want to remove the header");
 		std::string message=packet.substr(pos+1, packet.length()-pos-2);
 		// parse message body by tokening on ","
 		typedef boost::tokenizer<boost::char_separator<char> >
@@ -918,11 +924,13 @@ bool Novatel::ParseVersion(std::string packet) {
 		boost::char_separator<char> sep(",");
 		tokenizer tokens(message, sep);
 		// set up iterator to go through token list
+        log_info_("parsed the message by tokening on <,> , Now setting up iterator  ");
 		tokenizer::iterator current_token=tokens.begin();
 		string num_comps_string=*(current_token);
 		int number_components=atoi(num_comps_string.c_str());
 		// make sure the correct number of tokens were found
 		int token_count=0;
+		log_info_("Now counting tokens");
 		for(current_token=tokens.begin(); current_token!=tokens.end();++current_token)
 		{
 			//log_debug_(*current_token);
@@ -930,6 +938,7 @@ bool Novatel::ParseVersion(std::string packet) {
 		}
 
 		// should be 9 tokens, if not something is wrong
+		log_info_("Now checking number of tokens");
 		if (token_count!=(8*number_components+1)) {
             log_error_("Error parsing received version. "
                        "Incorrect number of tokens found.");
@@ -942,17 +951,24 @@ bool Novatel::ParseVersion(std::string packet) {
 
 		current_token=tokens.begin();
 		// device type is 2nd token
+        log_info_("setting device type");
 		string device_type=*(++current_token);
+
+        log_info_("setting model");
 		// model is 3rd token
 		model_=*(++current_token);
 		// serial number is 4th token
+		log_info_("setting serial number");
 		serial_number_=*(++current_token);
 		// model is 5rd token
+		log_info_("setting hardware version");
 		hardware_version_=*(++current_token);
 		// model is 6rd token
+		log_info_("setting software version");
 		software_version_=*(++current_token);
 
 		// parse the version:
+		log_info_("parsing hardware version");
 		if (hardware_version_.length()>3)
             protocol_version_=hardware_version_.substr(1,4);
 		else
@@ -960,30 +976,36 @@ bool Novatel::ParseVersion(std::string packet) {
 
 		// parse model number:
 		// is the receiver capable of raw measurements?
+		log_info_("parse model number");
+		log_info_("raw measurements?");
         if (model_.find("L")!=string::npos)
 			raw_capable_=true;
 		else
 			raw_capable_=false;
 
 		// can the receiver receive L2?
+		log_info_("L2 possible?");
 		if (model_.find("12")!=string::npos)
 			l2_capable_=true;
 		else
 			l2_capable_=false;
 
 		// can the receiver receive GLONASS?
+		log_info_("glonass ?");
 		if (model_.find("G")!=string::npos)
 			glonass_capable_=true;
 		else
 			glonass_capable_=false;
 
 		// Is this a SPAN unit?
+		log_info_("SPAN possible?");
 		if ((model_.find("I")!=string::npos)||(model_.find("J")!=string::npos))
 			span_capable_=true;
 		else
 			span_capable_=false;
 
 		// Can the receiver process RTK?
+		log_info_("RTK?");
 		if (model_.find("R")!=string::npos)
 			rtk_capable_=true;
 		else
@@ -992,6 +1014,7 @@ bool Novatel::ParseVersion(std::string packet) {
 
         // fix for oem4 span receivers - do not use l12 notation
         // i think all oem4 spans are l1 l2 capable and raw capable
+        log_info_("Check on OEM and span");
         if ((protocol_version_=="OEM4")&&(span_capable_)) {
             l2_capable_=true;
             raw_capable_=true;
@@ -1031,16 +1054,16 @@ void Novatel::ReadSerialPort() {
 	        //return;
     	}
 		// timestamp the read
-		if (time_handler_) 
+		if (time_handler_)
 			read_timestamp_ = time_handler_();
-		else 
+		else
 			read_timestamp_ = 0;
 
 		//std::cout << read_timestamp_ <<  "  bytes: " << len << std::endl;
 		// add data to the buffer to be parsed
 		BufferIncomingData(buffer, len);
 	}
-	
+
 }
 
 void Novatel::ReadFromFile(unsigned char* buffer, unsigned int length)
@@ -1318,7 +1341,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
 	        	payload_length = (((uint16_t) *(message + 9)) << 8) +
 	        	                 ((uint16_t) *(message + 8));
 	        	// unsigned long crc_of_received = CalculateBlockCRC32(length-4, message);
-	        	
+
 	        	// std::stringstream asdf;
 	        	// asdf << "------\nheader_length: " << header_length << "\npayload_length: " << payload_length << "\n";
 	        	// asdf << "length idx: " << length << "\nsizeof: " << sizeof(cmp_ranges) << "\n";
@@ -1341,7 +1364,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
 	        	       message + header_length + payload_length,
 	        	       4);
 
-	        	
+
 
 	        	// asdf << "sizeof after memcpy : " << sizeof(cmp_ranges) << "\n";
 	        	// asdf << "crc after shoving: " ;
@@ -1351,7 +1374,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
 	        	// log_info_(asdf.str().c_str()); asdf.str("");
 	        	// printHex((char*)message,length);
 
-	        	
+
 	        	//printHex((char*)cmp_ranges.range_data[0],sizeof(24*((int32_t)*(message+header_length))));
 
 	            // memcpy(&cmp_ranges, message, length);
@@ -1764,7 +1787,7 @@ bool Novatel::ConvertLLaUTM(double Lat, double Long, double *northing, double *e
      double LongOriginRad;
 
      double N, T, C, A, M;
-     
+
      //Make sure the longitude is between -180.00 .. 179.9
      *zone = int((LongTemp + 180)/6.0) + 1;
      if (Lat >= 56.0 && Lat < 64.0 && LongTemp >= 3.0 && LongTemp < 12.0)
@@ -1791,7 +1814,7 @@ bool Novatel::ConvertLLaUTM(double Lat, double Long, double *northing, double *e
                 - (3*ee/8     + 3*ee*ee/32 + 45*ee*ee*ee/1024)*sin(2*LatRad)
                 + (15*ee*ee/256 + 45*ee*ee*ee/1024)*sin(4*LatRad)
                 - (35*ee*ee*ee/3072)*sin(6*LatRad));
-     
+
      *easting = (double)(k0*N*(A+(1-T+C)*A*A*A/6
                          + (5-18*T+T*T+72*C-58*e2)*A*A*A*A*A/120) + 500000.0);
      *northing = (double)(k0*(M+N*tan(LatRad)*(A*A/2+(5-T+9*C+4*C*C)*A*A*A*A/24
