@@ -161,9 +161,9 @@ inline void setMessageFormat(MessageType& messageType, MessageFormat format)
         case(BINARY): formatmask = 0b00000000; break;
         case(ASCII): formatmask = 0b00100000; break;
         case(ABREVIATED_ASCII ): formatmask = 0b01000000; break;
-        case(NMEA): formatmask = 0b01100000 break;
+        case(NMEA): formatmask = 0b01100000; break;
      }
-     MessageType.messageTypeContent = MessageType.messageTypeContent & mask + formatmask;
+     messageType.messageTypeContent = messageType.messageTypeContent & mask + formatmask;
 }
 
 inline void setResponseBit(MessageType& messageType, ResponseBit bit)
@@ -175,7 +175,7 @@ inline void setResponseBit(MessageType& messageType, ResponseBit bit)
         case(ORIGINAL_MESSAGE): formatmask = 0b00000000; break;
         case(RESPONSE_MESSAGE): formatmask = 0b10000000; break;
     }
-     MessageType.messageTypeContent = MessageType.messageTypeContent & mask + formatmask;
+     messageType.messageTypeContent = messageType.messageTypeContent & mask + formatmask;
 }
 
 
