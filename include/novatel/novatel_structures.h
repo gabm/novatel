@@ -103,7 +103,7 @@ namespace novatel {
  */
 PACK(
 struct MessageType {
-    uint8_t messageTypeContent
+    uint8_t messageTypeContent;
     /*
     unsigned reserved:5;
     MessageFormat format:2;
@@ -115,12 +115,12 @@ inline ResponseBit getResponseBit(uint8_t contentMessagetype)
 {
 	if ((contentMessagetype / 128)  == 0)
 	{
-		std::cout << "ORIGINAL_MESSAGE" << std::endl;
+		//std::cout << "ORIGINAL_MESSAGE" << std::endl;
 		return ORIGINAL_MESSAGE;
 	}
 	if ((contentMessagetype / 128)  == 1)
 	{
-		std::cout << "RESPONSE_MESSAGE" << std::endl;
+		//std::cout << "RESPONSE_MESSAGE" << std::endl;
 		return RESPONSE_MESSAGE;
 	}
 }
@@ -130,27 +130,54 @@ inline MessageFormat getMessageFormat(uint8_t contentMessagetype)
 {
 	if ((contentMessagetype / 32) % 4 == 0)
 	{
-		std::cout << "Binary" << std::endl;
+		//std::cout << "Binary" << std::endl;
 		return BINARY;
 	}
 	if ((contentMessagetype / 32) % 4 ==1)
 	{
-		std::cout << "Ascii" << std::endl;
+		//std::cout << "Ascii" << std::endl;
 		return ASCII;
 	}
 
 	if ((contentMessagetype / 32) % 4 == 2)
 	{
-		std::cout << "ABREVIATED_ASCII" << std::endl;
+		//std::cout << "ABREVIATED_ASCII" << std::endl;
 		return ABREVIATED_ASCII;
 	}
 
 	if ((contentMessagetype / 32) % 4 == 3)
 	{
-		std::cout << "NMEA" << std::endl;
+		//std::cout << "NMEA" << std::endl;
 		return NMEA;
 	}
 }
+
+inline void setMessageFormat(MessageType& messageType, MessageFormat format)
+{
+    uint8_t mask = 0b10011111;
+    uint8_t formatmask;
+    switch(format)
+    {
+        case(BINARY): formatmask = 0b00000000; break;
+        case(ASCII): formatmask = 0b00100000; break;
+        case(ABREVIATED_ASCII ): formatmask = 0b01000000; break;
+        case(NMEA): formatmask = 0b01100000 break;
+     }
+     MessageType.messageTypeContent = MessageType.messageTypeContent & mask + formatmask;
+}
+
+inline void setResponseBit(MessageType& messageType, ResponseBit bit)
+{
+    uint8_t mask = 0b01111111;
+    uint8_t formatmask;
+    switch(bit)
+    {
+        case(ORIGINAL_MESSAGE): formatmask = 0b00000000; break;
+        case(RESPONSE_MESSAGE): formatmask = 0b10000000; break;
+    }
+     MessageType.messageTypeContent = MessageType.messageTypeContent & mask + formatmask;
+}
+
 
 
 //! Header prepended to OEM4 binary messages

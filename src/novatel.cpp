@@ -547,8 +547,9 @@ uint16_t         version;       	//!< Receiver software build number (0-65535)
 bool Novatel::InjectAlmanac(Almanac almanac) {
     try {
         MessageType type;
-        type.format = BINARY;
-        type.response = ORIGINAL_MESSAGE;
+        setMessageFormat(type, BINARY);
+        setResponseBit(type, ORIGINAL_MESSAGE);
+
 
         almanac.header.sync1 = NOVATEL_SYNC_BYTE_1;
         almanac.header.sync2 = NOVATEL_SYNC_BYTE_2;
