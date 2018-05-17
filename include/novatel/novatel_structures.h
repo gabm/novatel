@@ -103,10 +103,55 @@ namespace novatel {
  */
 PACK(
 struct MessageType {
+    uint8_t messageTypeContent
+    /*
     unsigned reserved:5;
     MessageFormat format:2;
     ResponseBit response:1;
+    */
 });
+
+inline ResponseBit getResponseBit(uint8_t contentMessagetype)
+{
+	if ((contentMessagetype / 128)  == 0)
+	{
+		std::cout << "ORIGINAL_MESSAGE" << std::endl;
+		return ORIGINAL_MESSAGE;
+	}
+	if ((contentMessagetype / 128)  == 1)
+	{
+		std::cout << "RESPONSE_MESSAGE" << std::endl;
+		return RESPONSE_MESSAGE;
+	}
+}
+
+
+inline MessageFormat getMessageFormat(uint8_t contentMessagetype)
+{
+	if ((contentMessagetype / 32) % 4 == 0)
+	{
+		std::cout << "Binary" << std::endl;
+		return BINARY;
+	}
+	if ((contentMessagetype / 32) % 4 ==1)
+	{
+		std::cout << "Ascii" << std::endl;
+		return ASCII;
+	}
+
+	if ((contentMessagetype / 32) % 4 == 2)
+	{
+		std::cout << "ABREVIATED_ASCII" << std::endl;
+		return ABREVIATED_ASCII;
+	}
+
+	if ((contentMessagetype / 32) % 4 == 3)
+	{
+		std::cout << "NMEA" << std::endl;
+		return NMEA;
+	}
+}
+
 
 //! Header prepended to OEM4 binary messages
 PACK(
@@ -704,7 +749,7 @@ struct RangeMeasurements {
  * This log contains the pseudorange information for a
  * single channel. Used in the RangeMeasurements structure.
  */
-PACK( 
+PACK(
 struct CompressedRangeRecord {
     int64_t doppler:28;                             //!< Doppler frequency [Hz]; SF = 1/256
     uint64_t pseudorange:36;                         //!<  pseudorange [m]; SF = 1/128
@@ -833,7 +878,7 @@ struct RawAlmanac
 
 /*!
  * ALMANAC
- * Contains decoded almanac parameters from Subframes 4 and 5 with parity 
+ * Contains decoded almanac parameters from Subframes 4 and 5 with parity
  * info removed.
  */
 PACK(
@@ -841,7 +886,7 @@ struct AlmanacData {
 	uint32_t prn;
 	uint32_t ref_week;
 	double ref_time;					//!< [sec]
-	double eccentricity;			
+	double eccentricity;
 	double right_ascension_rate;		//!< [rad/sec]
 	double right_ascension;				//!< [rad]
 	double perigee;						//!< [rad]
@@ -851,10 +896,10 @@ struct AlmanacData {
 	double corrected_mean_motion;		//!< [rad/sec]
 	double semi_major_axis;				//!< [m]
 	double inclination_angle;			//!< [rad] Angle of inclination relative to .3*pi
-	uint32_t sv_configuration;			//!< 
+	uint32_t sv_configuration;			//!<
 	uint32_t sv_health;					//!< (6 bits) From Page 25 of subframe 4 or 5
-	uint32_t sv_health_from_almanac;	//!< (8 bits) 
-	true_false anti_spoofing;			//!< 
+	uint32_t sv_health_from_almanac;	//!< (8 bits)
+	true_false anti_spoofing;			//!<
 });
 PACK(
 struct Almanac {
