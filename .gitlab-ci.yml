@@ -1,0 +1,66 @@
+stages:
+  - build
+  - test
+  - deploy
+
+
+.build-linux: &build-linux
+  stage: build
+  tags:
+    - linux
+  script:
+    - conda install -y build-tool
+    - build-tool build conda-recipe --croot $(pwd)/builds --no-test
+  artifacts:
+    paths:
+      - builds/noarch/*.tar.bz2
+      - builds/linux-64/*.tar.bz2
+
+.test-linux: &test-linux
+  stage: test
+  tags:
+    - linux
+  script:
+    - conda install -y build-tool
+    - build-tool build conda-recipe --croot $(pwd)/builds -t
+
+build-linux-intel64:
+  <<: *build-linux
+  image: draive-ci-intel64:latest
+test-linux-intel64:
+  <<: *test-linux
+  image: draive-ci-intel64:latest
+ 
+
+  
+build-win-intel64:
+  stage: build
+  tags:
+    - win
+  script:
+    - conda install -y build-tool
+    - build-tool build conda-recipe --croot $(Join-Path (pwd) builds) --no-test
+  artifacts:
+    paths:
+      - $(Join-Path (pwd) builds)/win-64/*.tar.bz2
+
+test-win-intel64:
+  stage: test
+  tags:
+    - win
+  script:
+    - conda install -y build-tool
+    - build-tool build conda-recipe --croot $(Join-Path (pwd) builds) -t
+
+
+deploy-to-dev:
+  image: draive-ci-intel64:latest
+  stage: deploy
+  environment: link.developers
+  tags:
+    - linux
+  script:
+    - conda install darts-cli -y
+    - darts-cli conda link.developers $(pwd)/builds/
+  only:
+    - master@link.developers/native-libs/novatel

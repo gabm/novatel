@@ -1,0 +1,26 @@
+package:
+    name: novatel
+    version: "0.9.0"
+
+source:
+    git_url: ../
+
+build:
+  number: 8
+  detect_binary_files_with_prefix: true
+  features:
+     - {{ COMPILER_FEATURE }}
+
+requirements:
+  build:
+    - cmake
+    - serial
+    - boost
+    - ld-cmake-tools
+
+  run:
+    - serial
+    - boost	
+about:
+    licensing: The BSD License
+    home: https://github.com/GAVLab/novatel
