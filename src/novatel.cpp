@@ -1180,10 +1180,11 @@ void Novatel::BufferIncomingData(unsigned char *message, unsigned int length)
 		}
 	}	// end for
 }
-
+/*only those types are implemented which are easily parsed
+other types can be implemented according to the datatype specification*/
 void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE message_id) {
     std::stringstream output;
-    output << "Parsing Log: " << message_id << std::endl;
+    output << "Parsing Log of Message ID: " << message_id << std::endl;
     log_debug_(output.str());
 		uint16_t payload_length;
 		uint16_t header_length;
