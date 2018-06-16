@@ -110,7 +110,7 @@ inline void DefaultAcknowledgementHandler() {
 }
 
 inline void DefaultDebugMsgCallback(const std::string &msg) {
-    ;//std::cout << "Novatel Debug: " << msg << std::endl;
+    std::cout << "Novatel Debug: " << msg << std::endl;
 }
 
 inline void DefaultInfoMsgCallback(const std::string &msg) {
@@ -899,16 +899,16 @@ bool Novatel::UpdateVersion()
 
 bool Novatel::ParseVersion(std::string packet) {
 	// parse the results - message should start with "#VERSIONA"
-        log_info_("searching for version" );
+
         size_t found_version=packet.find("VERSIONA");
 		if (found_version==string::npos)
 			return false;
 
 		// parse version information
 		// remove header
-		log_info_("searching for ;");
+
 		size_t pos=packet.find(";");
-		log_info_("Is ; found ?");
+
 		if (pos==string::npos) {
             log_error_("Error parsing received version."
                        " End of message was not found");
@@ -917,7 +917,7 @@ bool Novatel::ParseVersion(std::string packet) {
 		}
 
 		// remove header from message
-		log_info_("Now we want to remove the header");
+
 		std::string message=packet.substr(pos+1, packet.length()-pos-2);
 		// parse message body by tokening on ","
 		typedef boost::tokenizer<boost::char_separator<char> >
@@ -925,13 +925,12 @@ bool Novatel::ParseVersion(std::string packet) {
 		boost::char_separator<char> sep(",");
 		tokenizer tokens(message, sep);
 		// set up iterator to go through token list
-        log_info_("parsed the message by tokening on <,> , Now setting up iterator  ");
 		tokenizer::iterator current_token=tokens.begin();
 		string num_comps_string=*(current_token);
 		int number_components=atoi(num_comps_string.c_str());
 		// make sure the correct number of tokens were found
 		int token_count=0;
-		log_info_("Now counting tokens");
+
 		for(current_token=tokens.begin(); current_token!=tokens.end();++current_token)
 		{
 			//log_debug_(*current_token);
@@ -939,7 +938,7 @@ bool Novatel::ParseVersion(std::string packet) {
 		}
 
 		// should be 9 tokens, if not something is wrong
-		log_info_("Now checking number of tokens");
+
 		if (token_count!=(8*number_components+1)) {
             log_error_("Error parsing received version. "
                        "Incorrect number of tokens found.");
@@ -952,24 +951,24 @@ bool Novatel::ParseVersion(std::string packet) {
 
 		current_token=tokens.begin();
 		// device type is 2nd token
-        log_info_("setting device type");
+
 		string device_type=*(++current_token);
 
-        log_info_("setting model");
+
 		// model is 3rd token
 		model_=*(++current_token);
 		// serial number is 4th token
-		log_info_("setting serial number");
+
 		serial_number_=*(++current_token);
 		// model is 5rd token
-		log_info_("setting hardware version");
+
 		hardware_version_=*(++current_token);
 		// model is 6rd token
-		log_info_("setting software version");
+
 		software_version_=*(++current_token);
 
 		// parse the version:
-		log_info_("parsing hardware version");
+
 		if (hardware_version_.length()>3)
             protocol_version_=hardware_version_.substr(1,4);
 		else
@@ -977,36 +976,35 @@ bool Novatel::ParseVersion(std::string packet) {
 
 		// parse model number:
 		// is the receiver capable of raw measurements?
-		log_info_("parse model number");
-		log_info_("raw measurements?");
+
         if (model_.find("L")!=string::npos)
 			raw_capable_=true;
 		else
 			raw_capable_=false;
 
 		// can the receiver receive L2?
-		log_info_("L2 possible?");
+
 		if (model_.find("12")!=string::npos)
 			l2_capable_=true;
 		else
 			l2_capable_=false;
 
 		// can the receiver receive GLONASS?
-		log_info_("glonass ?");
+
 		if (model_.find("G")!=string::npos)
 			glonass_capable_=true;
 		else
 			glonass_capable_=false;
 
 		// Is this a SPAN unit?
-		log_info_("SPAN possible?");
+
 		if ((model_.find("I")!=string::npos)||(model_.find("J")!=string::npos))
 			span_capable_=true;
 		else
 			span_capable_=false;
 
 		// Can the receiver process RTK?
-		log_info_("RTK?");
+
 		if (model_.find("R")!=string::npos)
 			rtk_capable_=true;
 		else
@@ -1015,7 +1013,7 @@ bool Novatel::ParseVersion(std::string packet) {
 
         // fix for oem4 span receivers - do not use l12 notation
         // i think all oem4 spans are l1 l2 capable and raw capable
-        log_info_("Check on OEM and span");
+
         if ((protocol_version_=="OEM4")&&(span_capable_)) {
             l2_capable_=true;
             raw_capable_=true;
@@ -1182,11 +1180,12 @@ void Novatel::BufferIncomingData(unsigned char *message, unsigned int length)
 		}
 	}	// end for
 }
-
+/*only those types are implemented which are easily parsed
+other types can be implemented according to the datatype specification*/
 void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE message_id) {
-    //stringstream output;
-    //output << "Parsing Log: " << message_id << endl;
-    //log_debug_(output.str());
+    std::stringstream output;
+    output << "Parsing Log of Message ID: " << message_id << std::endl;
+    log_debug_(output.str());
 		uint16_t payload_length;
 		uint16_t header_length;
 
