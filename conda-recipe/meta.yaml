@@ -6,7 +6,7 @@ source:
     git_url: ../
 
 build:
-  number: 9
+  number: 10
   detect_binary_files_with_prefix: true
   features:
      - {{ COMPILER_FEATURE }}
@@ -15,12 +15,12 @@ requirements:
   build:
     - cmake
     - serial
-    - boost
+    - boost=1.67
     - ld-cmake-tools
 
   run:
     - serial
-    - boost	
+    - boost=1.67	
 about:
     licensing: The BSD License
     home: https://github.com/GAVLab/novatel
