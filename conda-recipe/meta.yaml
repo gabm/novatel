@@ -1,12 +1,12 @@
 package:
     name: novatel
-    version: "0.9.0"
+    version: "0.9.0.1"
 
 source:
     git_url: ../
 
 build:
-  number: 10
+  number: 0
   detect_binary_files_with_prefix: true
   features:
      - {{ COMPILER_FEATURE }}
