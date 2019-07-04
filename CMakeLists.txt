@@ -70,6 +70,7 @@ set(SOURCE_FILES
 # Declare a cpp library
 add_library(${LIB_NAME} STATIC
 			${SOURCE_FILES})
+set_property(TARGET ${LIB_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_include_directories(${LIB_NAME}
          PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/>)
